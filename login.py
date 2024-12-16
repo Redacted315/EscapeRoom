@@ -1,12 +1,14 @@
 import multiprocessing
 import tkinter as tk
+from pygame import mixer
 import time
 
 class Login():
-    def __init__(self, captcha, gif_file, gif_fps):
-        
+    def __init__(self, captcha_image, gif_file, gif_fps):
+        mixer.init()
+        self.sound_wrong = mixer.Sound("wrong.mp3")
         self.fps = {10:100, 15:67, 24:42 , 30:33, 36:28, 42:24}  # delay between frames in ms
-        self.captcha = captcha
+        self.captcha = captcha_image
         self.gif_file = gif_file
         self.gif_fps = gif_fps
         self.is_auth = False
@@ -22,7 +24,6 @@ class Login():
         pos_y = ( screen_height / 2 ) - ( window_height / 2 )
         self.main.geometry(f"{window_width}x{window_height}+{int(pos_x)}+{int(pos_y)}")
         
-        #self.submit_btn = tk.Button(self.main, text="Submit", command=self.go)
         
         self.picture_frame = tk.Frame(self.main)
         self.picture = tk.PhotoImage(file=self.captcha, format="png")
@@ -50,16 +51,15 @@ class Login():
         self.button_9 = tk.Button(self.button_frame, text="9", command=lambda: self.enter_number(9)).grid(column=2, row=2, padx=5, pady=5)
         self.button_0 = tk.Button(self.button_frame, text="0", command=lambda: self.enter_number(0)).grid(column=0, row=3, padx=5, pady=5)
         self.button_reset = tk.Button(self.button_frame, text="Reset", command=self.clear_nums).grid(column=1, row=3, columnspan=2, padx=5, pady=5)
-        self.button_enter = tk.Button(self.button_frame, text="Enter", command=self.go).grid(column=3, row=0, rowspan=3, padx=5, pady=5)
+        # self.button_enter = tk.Button(self.button_frame, text="Enter", command=self.go).grid(column=3, row=0, rowspan=3, padx=5, pady=5)
+        self.button_enter = tk.Button(self.main, text="Enter", command=self.go).place(x=400, y=400)
         self.button_frame.pack()
         self.main.mainloop()
         
     def display_gif(self): # modified from https://stackoverflow.com/a/42882481
-        # file = self.gif_file
         self.n_of_loops = 0
         frameCnt = 15
         
-
         frames = [tk.PhotoImage(file=self.gif_file,format = 'gif -index %i' %(i)) for i in range(frameCnt)]
         def update(ind):
             # kill window after gif loops n times
@@ -90,9 +90,11 @@ class Login():
             return
         
     def clear_nums(self):
+        self.sound_wrong.play()
         self.digit_1["text"] = "_"
         self.digit_2["text"] = "_"
         self.digit_3["text"] = "_"
+
         
     def go(self):
         if self.digit_1["text"] != "4" or self.digit_2["text"] != "5" or self.digit_3["text"] != "8":
@@ -104,7 +106,6 @@ class Login():
             self.digit_frame.destroy()
             self.main.update()
             self.display_gif()
-
 
 
 def test():
