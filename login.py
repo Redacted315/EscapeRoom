@@ -30,27 +30,31 @@ class Login():
         self.picture_frame.pack()
 
         self.digit_frame = tk.Frame(self.main)
-        self.digit_1 = tk.Label(self.digit_frame, text="0").grid(column=0, row=0)
-        self.digit_2 = tk.Label(self.digit_frame, text="0").grid(column=1, row=0)
-        self.digit_3 = tk.Label(self.digit_frame, text="0").grid(column=2, row=0)
+        self.digit_1 = tk.Label(self.digit_frame, text="_")
+        self.digit_1.grid(column=0, row=0)
+        self.digit_2 = tk.Label(self.digit_frame, text="_")
+        self.digit_2.grid(column=1, row=0)
+        self.digit_3 = tk.Label(self.digit_frame, text="_")
+        self.digit_3.grid(column=2, row=0)
         self.digit_frame.pack()
 
         self.button_frame = tk.Frame(self.main)
-        self.button_1 = tk.Button(self.button_frame, text="1", command=lambda: self.enter_number(1)).grid(column=0, row=0)
-        self.button_2 = tk.Button(self.button_frame, text="2", command=lambda: self.enter_number(2)).grid(column=1, row=0)
-        self.button_3 = tk.Button(self.button_frame, text="3", command=lambda: self.enter_number(3)).grid(column=2, row=0)
-        self.button_4 = tk.Button(self.button_frame, text="4", command=lambda: self.enter_number(4)).grid(column=0, row=1)
-        self.button_5 = tk.Button(self.button_frame, text="5", command=lambda: self.enter_number(5)).grid(column=1, row=1)
-        self.button_6 = tk.Button(self.button_frame, text="6", command=lambda: self.enter_number(6)).grid(column=2, row=1)
-        self.button_7 = tk.Button(self.button_frame, text="7", command=lambda: self.enter_number(7)).grid(column=0, row=2)
-        self.button_8 = tk.Button(self.button_frame, text="8", command=lambda: self.enter_number(8)).grid(column=1, row=2)
-        self.button_9 = tk.Button(self.button_frame, text="9", command=lambda: self.enter_number(9)).grid(column=2, row=2)
-        self.button_0 = tk.Button(self.button_frame, text="0", command=lambda: self.enter_number(0)).grid(column=0, row=3)
-        self.button_reset = tk.Button(self.button_frame, text="Reset", command=self.clear_nums).grid(column=2, row=3)
+        self.button_1 = tk.Button(self.button_frame, text="1", command=lambda: self.enter_number(1)).grid(column=0, row=0, padx=5, pady=5)
+        self.button_2 = tk.Button(self.button_frame, text="2", command=lambda: self.enter_number(2)).grid(column=1, row=0, padx=5, pady=5)
+        self.button_3 = tk.Button(self.button_frame, text="3", command=lambda: self.enter_number(3)).grid(column=2, row=0, padx=5, pady=5)
+        self.button_4 = tk.Button(self.button_frame, text="4", command=lambda: self.enter_number(4)).grid(column=0, row=1, padx=5, pady=5)
+        self.button_5 = tk.Button(self.button_frame, text="5", command=lambda: self.enter_number(5)).grid(column=1, row=1, padx=5, pady=5)
+        self.button_6 = tk.Button(self.button_frame, text="6", command=lambda: self.enter_number(6)).grid(column=2, row=1, padx=5, pady=5)
+        self.button_7 = tk.Button(self.button_frame, text="7", command=lambda: self.enter_number(7)).grid(column=0, row=2, padx=5, pady=5)
+        self.button_8 = tk.Button(self.button_frame, text="8", command=lambda: self.enter_number(8)).grid(column=1, row=2, padx=5, pady=5)
+        self.button_9 = tk.Button(self.button_frame, text="9", command=lambda: self.enter_number(9)).grid(column=2, row=2, padx=5, pady=5)
+        self.button_0 = tk.Button(self.button_frame, text="0", command=lambda: self.enter_number(0)).grid(column=0, row=3, padx=5, pady=5)
+        self.button_reset = tk.Button(self.button_frame, text="Reset", command=self.clear_nums).grid(column=1, row=3, columnspan=2, padx=5, pady=5)
+        self.button_enter = tk.Button(self.button_frame, text="Enter", command=self.go).grid(column=3, row=0, rowspan=3, padx=5, pady=5)
         self.button_frame.pack()
         self.main.mainloop()
         
-    def display_gif(self): # credit to https://stackoverflow.com/a/42882481
+    def display_gif(self): # modified from https://stackoverflow.com/a/42882481
         # file = self.gif_file
         self.n_of_loops = 0
         frameCnt = 15
@@ -58,8 +62,8 @@ class Login():
 
         frames = [tk.PhotoImage(file=self.gif_file,format = 'gif -index %i' %(i)) for i in range(frameCnt)]
         def update(ind):
-            # kill window after gif loops 5 times
-            if self.n_of_loops >= frameCnt*5:
+            # kill window after gif loops n times
+            if self.n_of_loops >= frameCnt*2:
                 self.main.quit()
 
             self.n_of_loops += 1
@@ -75,14 +79,36 @@ class Login():
         # self.main.mainloop()
     
     def enter_number(self, b):
-        print(b)
+        if self.digit_1["text"] == "_":
+            self.digit_1.config(text=str(b))
+            return
+        elif self.digit_2["text"] == "_":
+            self.digit_2.config(text=str(b))
+            return
+        elif self.digit_3["text"] == "_":
+            self.digit_3.config(text=str(b))
+            return
         
     def clear_nums(self):
-        pass
+        self.digit_1["text"] = "_"
+        self.digit_2["text"] = "_"
+        self.digit_3["text"] = "_"
+        
     def go(self):
-        self.is_auth = True
-        self.submit_btn.destroy()
-        self.main.update()
-        self.display_gif()
+        if self.digit_1["text"] != "4" or self.digit_2["text"] != "5" or self.digit_3["text"] != "8":
+            self.clear_nums()
+        else:
+            self.is_auth = True
+            self.picture_frame.destroy()
+            self.button_frame.destroy()
+            self.digit_frame.destroy()
+            self.main.update()
+            self.display_gif()
 
 
+
+def test():
+    A = Login("miku.png", "vault.gif", 15)
+
+if __name__ == "__main__":
+    test()
