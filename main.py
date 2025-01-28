@@ -1,6 +1,7 @@
 import logging
 import tkinter as tk
 from login import Login
+from game import Game
 
 # to fix gif non-persistant background
 # magick input.gif -coalesce output.gif
@@ -14,10 +15,11 @@ logging.basicConfig(
 
 
 def main():
-    login = Login(15)
+    login = Login()
     if not login.is_auth:
         logger.info("User Authentication Failure")
-        
+    else:
+        game = Game()
 
 
 if __name__ == "__main__":

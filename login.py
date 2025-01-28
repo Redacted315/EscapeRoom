@@ -2,7 +2,7 @@ import tkinter as tk  # Used for GUI creation.
 from pygame import mixer  # Used for audio playback.
 
 class Login():
-    def __init__(self, gif_fps):
+    def __init__(self, gif_fps=15):
         # Initialize the mixer for playing sounds.
         mixer.init()
         self.sound_wrong = mixer.Sound("assets\\audio\\wrong.mp3")  # Load the 'wrong' sound.
@@ -124,7 +124,7 @@ class Login():
             self.display_gif()
 
 # def test():
-#     a = Login(15)
+#     a = Login()
 
 # if __name__ == "__main__":
 #     test()
