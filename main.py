@@ -1,25 +1,37 @@
-import logging
+import threading
+import time
 import tkinter as tk
 from login import Login
 from game import Game
 
-# to fix gif non-persistant background
-# magick input.gif -coalesce output.gif
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    filename='escape_room.log',
-    format='%(asctime)s %(levelname)-8s %(message)s',
-    level=logging.DEBUG,
-    datefmt='%Y-%m-%d %H:%M:%S')
+def background_task(root, game):
+    while True:
+        with open("is_logged_in", 'r') as file:
+            if file.readline() == "True":
+                root.after(0, on_logged_in, root, game)
+                break
+        time.sleep(2)  # Wait before checking again
+
+
+def on_logged_in(root, game):
+    root.deiconify()
+    game.begin()
 
 
 def main():
-    login = Login()
-    if not login.is_auth:
-        logger.info("User Authentication Failure")
-    else:
-        game = Game()
+    # make sure not logged in from last session
+    with open("is_logged_in", 'w') as file:
+        file.write("False")
+    root = tk.Tk()
+    toplevel = tk.Toplevel(root)
+    game = Game(root)
+    root.withdraw()
+    # Start the background thread
+    thread = threading.Thread(target=background_task, args=(root, game), daemon=True)
+    thread.start()
+    login = Login(toplevel)
+    root.mainloop()
 
 
 if __name__ == "__main__":

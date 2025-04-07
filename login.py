@@ -2,7 +2,7 @@ import tkinter as tk  # Used for GUI creation.
 from pygame import mixer  # Used for audio playback.
 
 class Login():
-    def __init__(self, gif_fps=15):
+    def __init__(self, root, gif_fps=15):
         # Initialize the mixer for playing sounds.
         mixer.init()
         self.sound_wrong = mixer.Sound("assets\\audio\\wrong.mp3")  # Load the 'wrong' sound.
@@ -16,7 +16,7 @@ class Login():
         self.is_auth = False  # Track if authentication is successful.
 
         # Initialize the main application window.
-        self.main = tk.Tk()
+        self.main = root
         self.main.title("Login")
         self.main.resizable(width=False, height=False)
         self.main.configure(background="#36454F")  # Set background color.
@@ -87,7 +87,7 @@ class Login():
         def update(ind):
             # Exit the application after two loops.
             if self.n_of_loops >= frameCnt * 2:
-                self.main.quit()
+                self.main.destroy()
 
             self.n_of_loops += 1
             label.configure(image=frames[ind])
@@ -120,11 +120,15 @@ class Login():
             self.is_auth = True
             for frame in [self.picture_frame, self.button_frame, self.digit_frame]:
                 frame.destroy()
-            self.main.update()
+            # self.main.update()
+            with open("is_logged_in", 'w') as file:
+                file.write("True")
             self.display_gif()
 
 # def test():
-#     a = Login()
+#     root = tk.Tk()
+#     a = Login(root)
+#     root.mainloop()
 
 # if __name__ == "__main__":
 #     test()
