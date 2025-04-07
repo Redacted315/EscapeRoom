@@ -16,7 +16,7 @@ def background_task(root, game):
 
 def on_logged_in(root, game):
     root.deiconify()
-    game.begin()
+    game.go()
 
 
 def main():
@@ -28,7 +28,9 @@ def main():
     game = Game(root)
     root.withdraw()
     # Start the background thread
-    thread = threading.Thread(target=background_task, args=(root, game), daemon=True)
+    thread = threading.Thread(
+        target=background_task, args=(
+            root, game), daemon=True)
     thread.start()
     login = Login(toplevel)
     root.mainloop()
